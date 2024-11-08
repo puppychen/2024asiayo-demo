@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    ports:
+      - "8000:80"
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=asiayo_api
+      - DB_USERNAME=root
+      - DB_PASSWORD=Asi&!a_yo
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    ports:
+      - "3320:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Asi&!a_yo
+      MYSQL_DATABASE: asiayo_api
+      MYSQL_USER: jake
+      MYSQL_PASSWORD: Asi&!a_yo
+
+  nginx:
+    image: nginx:latest
+    container_name: laravel_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
